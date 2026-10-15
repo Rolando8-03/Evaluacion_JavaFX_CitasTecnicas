@@ -2,40 +2,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.citastecnicas.controller.ClienteController" prefWidth="1140" prefHeight="556" styleClass="workspace">
-  <children>
-    <Label text="Directorio de clientes" layoutX="18" layoutY="18" styleClass="section-title"/>
-    <Label fx:id="lblTotal" text="0 clientes encontrados" layoutX="18" layoutY="46" styleClass="subtitle"/>
-    <TextField fx:id="txtBuscar" promptText="Buscar por nombres, apellidos o correo" onAction="#buscar" layoutX="18" layoutY="77" prefWidth="390" styleClass="search"/>
-    <Button text="Buscar" onAction="#buscar" layoutX="420" layoutY="77" styleClass="secondary"/>
-    <Button text="Limpiar búsqueda" onAction="#limpiarBusqueda" layoutX="501" layoutY="77" styleClass="plain"/>
-    <TableView fx:id="tblClientes" AnchorPane.topAnchor="125" AnchorPane.bottomAnchor="19" AnchorPane.leftAnchor="18" AnchorPane.rightAnchor="348">
-      <columns>
-        <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-        <TableColumn fx:id="colNombres" text="Nombres" prefWidth="138"/>
-        <TableColumn fx:id="colApellidos" text="Apellidos" prefWidth="138"/>
-        <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="106"/>
-        <TableColumn fx:id="colCorreo" text="Correo" prefWidth="196"/>
-        <TableColumn fx:id="colActivo" text="Estado" prefWidth="77"/>
-      </columns>
-    </TableView>
-    <AnchorPane prefWidth="310" AnchorPane.topAnchor="18" AnchorPane.bottomAnchor="19" AnchorPane.rightAnchor="18" styleClass="form-card">
-      <children>
-        <Label fx:id="lblFormulario" text="Nuevo cliente" layoutX="19" layoutY="19" styleClass="form-title"/>
-        <Label text="Nombres *" layoutX="19" layoutY="57"/>
-        <TextField fx:id="txtNombres" layoutX="19" layoutY="80" prefWidth="272" promptText="Nombres del cliente"/>
-        <Label text="Apellidos *" layoutX="19" layoutY="121"/>
-        <TextField fx:id="txtApellidos" layoutX="19" layoutY="144" prefWidth="272" promptText="Apellidos del cliente"/>
-        <Label text="Teléfono *" layoutX="19" layoutY="185"/>
-        <TextField fx:id="txtTelefono" layoutX="19" layoutY="208" prefWidth="272" promptText="8888-8888"/>
-        <Label text="Correo *" layoutX="19" layoutY="249"/>
-        <TextField fx:id="txtCorreo" layoutX="19" layoutY="272" prefWidth="272" promptText="nombre@correo.com"/>
-        <CheckBox fx:id="chkActivo" text="Cliente activo" selected="true" layoutX="19" layoutY="321"/>
-        <Button text="Registrar cliente" onAction="#guardar" layoutX="19" layoutY="361" prefWidth="272" styleClass="primary"/>
-        <Button fx:id="btnEditar" text="Guardar cambios" onAction="#editar" layoutX="19" layoutY="403" prefWidth="272" styleClass="secondary"/>
-        <Button text="Nuevo / limpiar" onAction="#nuevo" layoutX="19" layoutY="445" prefWidth="153" styleClass="plain"/>
-        <Button fx:id="btnEliminar" text="Eliminar" onAction="#eliminar" layoutX="181" layoutY="445" prefWidth="110" styleClass="danger"/>
-        <Label text="* Campos obligatorios" layoutX="19" layoutY="492" styleClass="hint"/>
-      </children>
-    </AnchorPane>
-  </children>
+ <children>
+  <Label text="Directorio de clientes" layoutX="18" layoutY="18" styleClass="section-title"/>
+  <Label fx:id="lblTotal" text="0 clientes encontrados" layoutX="18" layoutY="46" styleClass="subtitle"/>
+  <TextField fx:id="txtBuscar" promptText="Buscar por nombres, apellidos o correo" onAction="#buscar" layoutX="18" layoutY="77" prefWidth="390" styleClass="search"/>
+  <Button text="Buscar" onAction="#buscar" layoutX="420" layoutY="77" styleClass="secondary"/>
+  <Button text="Limpiar búsqueda" onAction="#limpiarBusqueda" layoutX="501" layoutY="77" styleClass="plain"/>
+  <TableView fx:id="tblClientes" AnchorPane.topAnchor="125" AnchorPane.bottomAnchor="19" AnchorPane.leftAnchor="18" AnchorPane.rightAnchor="348">
+   <columns>
+    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+    <TableColumn fx:id="colNombres" text="Nombres" prefWidth="138"/>
+    <TableColumn fx:id="colApellidos" text="Apellidos" prefWidth="138"/>
+    <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="106"/>
+    <TableColumn fx:id="colCorreo" text="Correo" prefWidth="196"/>
+    <TableColumn fx:id="colActivo" text="Estado" prefWidth="77"/>
+   </columns>
+  </TableView>
+  <AnchorPane prefWidth="310" AnchorPane.topAnchor="18" AnchorPane.bottomAnchor="19" AnchorPane.rightAnchor="18" styleClass="form-card">
+   <children>
+    <Label fx:id="lblFormulario" text="Nuevo cliente" layoutX="19" layoutY="19" styleClass="form-title"/>
+    <Label text="Nombres *" layoutX="19" layoutY="57"/>
+    <TextField fx:id="txtNombres" layoutX="19" layoutY="80" prefWidth="272" promptText="Nombres del cliente"/>
+    <Label text="Apellidos *" layoutX="19" layoutY="121"/>
+    <TextField fx:id="txtApellidos" layoutX="19" layoutY="144" prefWidth="272" promptText="Apellidos del cliente"/>
+    <Label text="Teléfono *" layoutX="19" layoutY="185"/>
+    <TextField fx:id="txtTelefono" layoutX="19" layoutY="208" prefWidth="272" promptText="8888-8888"/>
+    <Label text="Correo *" layoutX="19" layoutY="249"/>
+    <TextField fx:id="txtCorreo" layoutX="19" layoutY="272" prefWidth="272" promptText="nombre@correo.com"/>
+    <CheckBox fx:id="chkActivo" text="Cliente activo" selected="true" layoutX="19" layoutY="321"/>
+    <Button text="Registrar cliente" onAction="#guardar" layoutX="19" layoutY="361" prefWidth="272" styleClass="primary"/>
+    <Button fx:id="btnEditar" text="Guardar cambios" onAction="#editar" layoutX="19" layoutY="403" prefWidth="272" styleClass="secondary"/>
+    <Button text="Nuevo / limpiar" onAction="#nuevo" layoutX="19" layoutY="445" prefWidth="153" styleClass="plain"/>
+    <Button fx:id="btnEliminar" text="Eliminar" onAction="#eliminar" layoutX="181" layoutY="445" prefWidth="110" styleClass="danger"/>
+    <Label text="* Campos obligatorios" layoutX="19" layoutY="492" styleClass="hint"/>
+   </children>
+  </AnchorPane>
+ </children>
 </AnchorPane>

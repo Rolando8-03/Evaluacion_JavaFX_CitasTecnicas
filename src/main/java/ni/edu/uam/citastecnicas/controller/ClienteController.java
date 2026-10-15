@@ -75,7 +75,7 @@ public final class ClienteController {
         Cliente cliente = null;
         if (!accion.equals("eliminar")) cliente = datos(id);
         if (accion.equals("eliminar") && !Alertas.confirmar(principal.ventana(),
-            "¿Eliminar físicamente al cliente #" + id + "? Si tiene citas, la eliminación será rechazada.")) {
+                "¿Eliminar físicamente al cliente #" + id + "? Si tiene citas, la eliminación será rechazada.")) {
             return;
         }
         final Cliente datosCliente = cliente;
