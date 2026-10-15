@@ -9,9 +9,9 @@ Evaluación de 30 puntos. Período exigido: **12–15 de octubre de 2026**.
 | Integrante | Usuario GitHub | Rama de trabajo | Responsabilidad |
 |---|---|---|---|
 | Rolando Enrique Mayorga Mena | `Rolando8-03` | `rolando/base-jdbc` | SQL, conexión JDBC, menú principal e integración |
-| Mauro Engelbert Delgado Saenz | masodel | `mauro/clientes` | Modelo, DAO, formulario, búsqueda y CRUD de clientes |
-| Aris Gavarrete | Arisgav | `aris/citas` | Modelo, DAO, formulario, relación y filtros de citas |
-| Dylan Mora | moraditoo | `dylan/pruebas` | Validaciones, alertas, pruebas, documentación y capturas |
+| Mauro Engelbert Delgado Saenz | `masodel` | `mauro/clientes` | Modelo, DAO, formulario, búsqueda y CRUD de clientes |
+| Aris Gavarrete | `Arisgav` | `aris/citas` | Modelo, DAO, formulario, relación y filtros de citas |
+| Dylan Mora | `moraditoo` | `dylan/pruebas` | Validaciones, alertas, pruebas, documentación y capturas |
 
 Los nombres provienen de los integrantes indicados y los trabajos previos del equipo.
 Rolando8-03 está confirmado. Completar los **usuarios reales de Mauro, Aris y Dylan**.
