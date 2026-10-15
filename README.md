@@ -208,10 +208,10 @@ al terminar. No reemplaza la prueba manual de cerrar/abrir la aplicación.
 
 Estas dos capturas muestran la interfaz cargada **sin conectar**. No prueban persistencia.
 
-![Clientes sin conexión](../../Desktop/Evaluacion_JavaFX_CitasTecnicas/docs/capturas/interfaz-clientes.png)
-![Citas sin conexión](../../Desktop/Evaluacion_JavaFX_CitasTecnicas/docs/capturas/interfaz-citas.png)
+![Clientes sin conexión](src/main/java/ni/edu/uam/citastecnicas/docs/capturas/interfaz-clientes.png)
+![Citas sin conexión](src/main/java/ni/edu/uam/citastecnicas/docs/capturas/interfaz-citas.png)
 
-Añadir aquí las capturas reales de las pruebas de [DEFENSA_Y_CAPTURAS.md](../../Desktop/Evaluacion_JavaFX_CitasTecnicas/docs/DEFENSA_Y_CAPTURAS.md):
+Añadir aquí las capturas reales de las pruebas de [DEFENSA_Y_CAPTURAS.md](src/main/java/ni/edu/uam/citastecnicas/docs/DEFENSA_Y_CAPTURAS.md):
 cliente, duplicado, edición, cita, búsqueda, filtros, Finalizada, rechazo de eliminación,
 persistencia, eliminación e historial. Registrar también el resultado observado y el autor.
 
