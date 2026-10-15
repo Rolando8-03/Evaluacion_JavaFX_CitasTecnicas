@@ -20,9 +20,9 @@ Cada persona debe aportar cambios sustantivos propios y poder defenderlos.
 
 - [Qué hace cada integrante](src/main/java/ni/edu/uam/citastecnicas/docs/RESPONSABILIDADES.md).
 - [Ramas, commits y pull requests](src/main/java/ni/edu/uam/citastecnicas/docs/GIT_EQUIPO.md).
-- [Revisión de todos los requisitos](../../Desktop/Evaluacion_JavaFX_CitasTecnicas/docs/REVISION_REQUISITOS.md).
-- [Pruebas, defensa y capturas](../../Desktop/Evaluacion_JavaFX_CitasTecnicas/docs/DEFENSA_Y_CAPTURAS.md).
-- [Verificación realizada y pendientes](../../Desktop/Evaluacion_JavaFX_CitasTecnicas/docs/VERIFICACION.md).
+- [Revisión de todos los requisitos](src/main/java/ni/edu/uam/citastecnicas/docs/REVISION_REQUISITOS.md).
+- [Pruebas, defensa y capturas](src/main/java/ni/edu/uam/citastecnicas/docs/DEFENSA_Y_CAPTURAS.md).
+- [Verificación realizada y pendientes](src/main/java/ni/edu/uam/citastecnicas/docs/VERIFICACION.md).
 
 ## Tecnologías y nivel del código
 
