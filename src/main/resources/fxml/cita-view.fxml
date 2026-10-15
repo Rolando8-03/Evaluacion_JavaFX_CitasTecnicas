@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.citastecnicas.controller.CitaController" prefWidth="1140" prefHeight="556" styleClass="workspace">
+ <children>
+  <Label text="Agenda de atención técnica" layoutX="18" layoutY="18" styleClass="section-title"/>
+  <Label fx:id="lblTotal" text="0 citas encontradas" layoutX="18" layoutY="46" styleClass="subtitle"/>
+  <ComboBox fx:id="cmbFiltroEstado" layoutX="18" layoutY="77" prefWidth="150" promptText="Estado"/>
+  <DatePicker fx:id="dpFiltroFecha" layoutX="180" layoutY="77" prefWidth="175" promptText="Todas las fechas"/>
+  <Button text="Aplicar filtros" onAction="#filtrar" layoutX="367" layoutY="77" styleClass="secondary"/>
+  <Button text="Limpiar filtros" onAction="#limpiarFiltros" layoutX="493" layoutY="77" styleClass="plain"/>
+  <TableView fx:id="tblCitas" AnchorPane.topAnchor="125" AnchorPane.bottomAnchor="19" AnchorPane.leftAnchor="18" AnchorPane.rightAnchor="348">
+   <columns>
+    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+    <TableColumn fx:id="colCliente" text="Cliente" prefWidth="206"/>
+    <TableColumn fx:id="colFecha" text="Fecha" prefWidth="99"/>
+    <TableColumn fx:id="colHora" text="Hora" prefWidth="70"/>
+    <TableColumn fx:id="colServicio" text="Servicio" prefWidth="167"/>
+    <TableColumn fx:id="colEstado" text="Estado" prefWidth="113"/>
+   </columns>
+  </TableView>
+  <AnchorPane prefWidth="310" AnchorPane.topAnchor="18" AnchorPane.bottomAnchor="19" AnchorPane.rightAnchor="18" styleClass="form-card">
+   <children>
+    <Label fx:id="lblFormulario" text="Nueva cita técnica" layoutX="19" layoutY="19" styleClass="form-title"/>
+    <Label text="Cliente *" layoutX="19" layoutY="57"/>
+    <ComboBox fx:id="cmbCliente" layoutX="19" layoutY="80" prefWidth="272" promptText="Seleccioná un cliente"/>
+    <Label text="Fecha *" layoutX="19" layoutY="121"/>
+    <Label text="Hora * (HH:mm)" layoutX="193" layoutY="121"/>
+    <DatePicker fx:id="dpFecha" layoutX="19" layoutY="144" prefWidth="161" promptText="Fecha de cita"/>
+    <TextField fx:id="txtHora" layoutX="192" layoutY="144" prefWidth="99" promptText="09:30"/>
+    <Label text="Tipo de servicio *" layoutX="19" layoutY="185"/>
+    <TextField fx:id="txtServicio" layoutX="19" layoutY="208" prefWidth="272" promptText="Mantenimiento / reparación"/>
+    <Label text="Descripción *" layoutX="19" layoutY="249"/>
+    <TextArea fx:id="txtDescripcion" layoutX="19" layoutY="272" prefWidth="272" prefHeight="73" wrapText="true" promptText="Describí el trabajo solicitado"/>
+    <Label text="Estado *" layoutX="19" layoutY="356"/>
+    <ComboBox fx:id="cmbEstado" layoutX="19" layoutY="379" prefWidth="272"/>
+    <Button text="Registrar cita" onAction="#guardar" layoutX="19" layoutY="425" prefWidth="132" styleClass="primary"/>
+    <Button fx:id="btnEditar" text="Guardar cambios" onAction="#editar" layoutX="159" layoutY="425" prefWidth="132" styleClass="secondary,compact-button"/>
+    <Button text="Nueva / limpiar" onAction="#nuevo" layoutX="19" layoutY="467" prefWidth="153" styleClass="plain"/>
+    <Button fx:id="btnEliminar" text="Eliminar" onAction="#eliminar" layoutX="181" layoutY="467" prefWidth="110" styleClass="danger"/>
+   </children>
+  </AnchorPane>
+ </children>
+</AnchorPane>
