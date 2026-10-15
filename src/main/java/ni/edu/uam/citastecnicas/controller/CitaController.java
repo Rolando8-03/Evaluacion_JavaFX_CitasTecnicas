@@ -32,12 +32,19 @@ public final class CitaController {
         cmbFiltroEstado.setValue("Todos");
         // Elegir en calendario evita interpretar silenciosamente fechas mal escritas.
         dpFecha.setEditable(false); dpFiltroFecha.setEditable(false);
+        dpFecha.setDayCellFactory(calendario -> new DateCell() {
+            @Override public void updateItem(LocalDate fecha, boolean vacia) {
+                super.updateItem(fecha, vacia);
+                setDisable(vacia || fecha == null || fecha.isBefore(LocalDate.now()));
+            }
+        });
         colId.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().getId()));
         colCliente.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreCliente()));
         colFecha.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
         colHora.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getHora().format(DateTimeFormatter.ofPattern("HH:mm"))));
         colServicio.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getTipoServicio()));
         colEstado.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getEstado()));
+        tblCitas.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         tblCitas.setPlaceholder(new Label("No hay citas para estos filtros."));
         tblCitas.getSelectionModel().selectedItemProperty().addListener((o,a,b) -> { if (b!=null) seleccionar(b); });
         nuevo();
@@ -103,7 +110,7 @@ public final class CitaController {
             return;
         }
         final CitaTecnica datosCita = cita;
-        principal.ejecutarEnSegundoPlano("Procesando cita…", () -> {
+        principal.ejecutarEnSegundoPlano(() -> {
             try {
                 String mensaje;
                 if (accion.equals("registrar")) {

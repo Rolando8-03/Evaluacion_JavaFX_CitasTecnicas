@@ -1,9 +1,9 @@
 # Evaluacion_JavaFX_CitasTecnicas
 
 Sistema de gestión de clientes y citas de **TecnoAsistencia Nicaragua S.A.**
-Universidad Americana (UAM) 
-CNU0525 - Programación de Aplicaciones de Escritorio - Grupo 2
-Docente: MSc. José Alejandro Durán García
+- Universidad Americana (UAM) 
+- CNU0525 - Programación de Aplicaciones de Escritorio - Grupo 2
+- Docente: MSc. José Alejandro Durán García
 
 ## Equipo y responsabilidades
 
@@ -43,11 +43,13 @@ PreparedStatement, ResultSet, SQLException y try-with-resources.
 | Todos los campos obligatorios | null, vacíos, espacios e invisibles sin contenido |
 | Texto | Longitud según VARCHAR; caracteres de control no válidos rechazados |
 | Nombres y apellidos | Letras/tildes, espacios, punto, apóstrofo y guion; máximo 80 |
-| Teléfono | Máximo 20 caracteres; 7–15 dígitos; separadores habituales, + inicial y paréntesis correctos |
+| Teléfono | Obligatorio y formato libre; máximo 20 caracteres de VARCHAR(20) |
 | Correo | Formato básico, máximo 120, parte local hasta 64; puntos/dominio revisados |
 | Correo repetido | Consulta con parámetros al insertar/editar; excluir propio ID; guardar correo en minúsculas; UNIQUE en PostgreSQL |
-| Fecha | Obligatoria, calendario no editable, año 1–9999 |
-| Hora | HH:mm, de 00:00 a 23:59, precisión de minutos |
+| Fecha | Obligatoria, calendario no editable, año 1–9999; no se guardan citas en el pasado |
+| Hora | HH:mm, de 00:00 a 23:59; fecha y hora deben ser posteriores al momento actual |
+| Cita repetida | Mismo cliente, fecha y hora rechazados al registrar y editar, excluyendo la cita actual |
+| Cliente activo | No se permite registrar ni guardar un cliente inactivo |
 | Servicio / descripción | Obligatorios, máximo 80 / 255 |
 | Estado | Solo Pendiente, En proceso, Finalizada y Cancelada |
 | Selección / ID | No editar/eliminar sin selección; IDs positivos en DAO; aviso si el registro ya desapareció |
@@ -71,7 +73,7 @@ por fuera de ella debe respetar esta normalización; UNIQUE compara el valor alm
 
    Fuera de una transacción, con autocommit. Omitir si ya existe.
 2. Abrir otra Query Tool conectada a **gestion_citas**.
-3. Abrir `../../Desktop/Evaluacion_JavaFX_CitasTecnicas/gestion_citas.sql` y ejecutar desde `BEGIN;` hasta `COMMIT;`.
+3. Abrir `gestion_citas.sql` y ejecutar desde `BEGIN;` hasta `COMMIT;`.
 4. Ejecutar los SELECT finales; deben mostrar gestion_citas y las dos tablas.
 
 ## Ejecución en IntelliJ
@@ -90,7 +92,7 @@ mvn clean javafx:run
 ```
 
 Al abrir, intenta cargar datos reales. Si falla, corregir credenciales y usar
-**Actualizar / conectar**. 
+**Buscar** en Clientes o **Aplicar filtros** en Citas para volver a consultar. 
 
 ## Uso
 

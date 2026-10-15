@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.citastecnicas.controller.ClienteController" prefWidth="1140" prefHeight="556" styleClass="workspace">
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="556" prefWidth="1140" styleClass="workspace" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="ni.edu.uam.citastecnicas.controller.ClienteController">
  <children>
-  <Label text="Directorio de clientes" layoutX="18" layoutY="18" styleClass="section-title"/>
-  <Label fx:id="lblTotal" text="0 clientes encontrados" layoutX="18" layoutY="46" styleClass="subtitle"/>
-  <TextField fx:id="txtBuscar" promptText="Buscar por nombres, apellidos o correo" onAction="#buscar" layoutX="18" layoutY="77" prefWidth="390" styleClass="search"/>
-  <Button text="Buscar" onAction="#buscar" layoutX="420" layoutY="77" styleClass="secondary"/>
-  <Button text="Limpiar búsqueda" onAction="#limpiarBusqueda" layoutX="501" layoutY="77" styleClass="plain"/>
-  <TableView fx:id="tblClientes" AnchorPane.topAnchor="125" AnchorPane.bottomAnchor="19" AnchorPane.leftAnchor="18" AnchorPane.rightAnchor="348">
+  <Label layoutX="18" layoutY="18" styleClass="section-title" text="Directorio de clientes" />
+  <Label fx:id="lblTotal" layoutX="18" layoutY="46" styleClass="subtitle" text="0 clientes encontrados" />
+  <TextField fx:id="txtBuscar" layoutX="18" layoutY="77" onAction="#buscar" prefWidth="390" promptText="Buscar por nombres, apellidos o correo" styleClass="search" />
+  <Button layoutX="420" layoutY="77" onAction="#buscar" styleClass="secondary" text="Buscar" />
+  <Button layoutX="501" layoutY="77" onAction="#limpiarBusqueda" styleClass="plain" text="Limpiar búsqueda" />
+  <TableView fx:id="tblClientes" AnchorPane.bottomAnchor="19" AnchorPane.leftAnchor="18" AnchorPane.rightAnchor="348" AnchorPane.topAnchor="125">
    <columns>
-    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-    <TableColumn fx:id="colNombres" text="Nombres" prefWidth="138"/>
-    <TableColumn fx:id="colApellidos" text="Apellidos" prefWidth="138"/>
-    <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="106"/>
-    <TableColumn fx:id="colCorreo" text="Correo" prefWidth="196"/>
-    <TableColumn fx:id="colActivo" text="Estado" prefWidth="77"/>
+    <TableColumn fx:id="colId" prefWidth="50" text="ID" />
+    <TableColumn fx:id="colNombres" prefWidth="138" text="Nombres" />
+    <TableColumn fx:id="colApellidos" prefWidth="138" text="Apellidos" />
+    <TableColumn fx:id="colTelefono" prefWidth="106" text="Teléfono" />
+    <TableColumn fx:id="colCorreo" prefWidth="196" text="Correo" />
+    <TableColumn fx:id="colActivo" prefWidth="77" text="Estado" visible="false" />
    </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
   </TableView>
-  <AnchorPane prefWidth="310" AnchorPane.topAnchor="18" AnchorPane.bottomAnchor="19" AnchorPane.rightAnchor="18" styleClass="form-card">
+  <AnchorPane prefWidth="310" styleClass="form-card" AnchorPane.bottomAnchor="19" AnchorPane.rightAnchor="18" AnchorPane.topAnchor="18">
    <children>
-    <Label fx:id="lblFormulario" text="Nuevo cliente" layoutX="19" layoutY="19" styleClass="form-title"/>
-    <Label text="Nombres *" layoutX="19" layoutY="57"/>
-    <TextField fx:id="txtNombres" layoutX="19" layoutY="80" prefWidth="272" promptText="Nombres del cliente"/>
-    <Label text="Apellidos *" layoutX="19" layoutY="121"/>
-    <TextField fx:id="txtApellidos" layoutX="19" layoutY="144" prefWidth="272" promptText="Apellidos del cliente"/>
-    <Label text="Teléfono *" layoutX="19" layoutY="185"/>
-    <TextField fx:id="txtTelefono" layoutX="19" layoutY="208" prefWidth="272" promptText="8888-8888"/>
-    <Label text="Correo *" layoutX="19" layoutY="249"/>
-    <TextField fx:id="txtCorreo" layoutX="19" layoutY="272" prefWidth="272" promptText="nombre@correo.com"/>
-    <CheckBox fx:id="chkActivo" text="Cliente activo" selected="true" layoutX="19" layoutY="321"/>
-    <Button text="Registrar cliente" onAction="#guardar" layoutX="19" layoutY="361" prefWidth="272" styleClass="primary"/>
-    <Button fx:id="btnEditar" text="Guardar cambios" onAction="#editar" layoutX="19" layoutY="403" prefWidth="272" styleClass="secondary"/>
-    <Button text="Nuevo / limpiar" onAction="#nuevo" layoutX="19" layoutY="445" prefWidth="153" styleClass="plain"/>
-    <Button fx:id="btnEliminar" text="Eliminar" onAction="#eliminar" layoutX="181" layoutY="445" prefWidth="110" styleClass="danger"/>
-    <Label text="* Campos obligatorios" layoutX="19" layoutY="492" styleClass="hint"/>
+    <Label fx:id="lblFormulario" layoutX="19" layoutY="19" styleClass="form-title" text="Nuevo cliente" />
+    <Label layoutX="19" layoutY="57" text="Nombres *" />
+    <TextField fx:id="txtNombres" layoutX="19" layoutY="80" prefWidth="272" promptText="Nombres del cliente" />
+    <Label layoutX="19" layoutY="121" text="Apellidos *" />
+    <TextField fx:id="txtApellidos" layoutX="19" layoutY="144" prefWidth="272" promptText="Apellidos del cliente" />
+    <Label layoutX="19" layoutY="185" text="Teléfono *" />
+    <TextField fx:id="txtTelefono" layoutX="19" layoutY="208" prefWidth="272" promptText="Teléfono del cliente" />
+    <Label layoutX="19" layoutY="249" text="Correo *" />
+    <TextField fx:id="txtCorreo" layoutX="19" layoutY="272" prefWidth="272" promptText="nombre@correo.com" />
+    <CheckBox fx:id="chkActivo" layoutX="19" layoutY="321" selected="true" text="Cliente activo" />
+    <Button layoutX="19" layoutY="361" onAction="#guardar" prefWidth="272" styleClass="primary" text="Registrar cliente" />
+    <Button fx:id="btnEditar" layoutX="19" layoutY="403" onAction="#editar" prefWidth="272" styleClass="secondary" text="Guardar cambios" />
+    <Button layoutX="19" layoutY="445" onAction="#nuevo" prefWidth="153" styleClass="plain" text="Nuevo / limpiar" />
+    <Button fx:id="btnEliminar" layoutX="181" layoutY="445" onAction="#eliminar" prefWidth="110" styleClass="danger" text="Eliminar" />
+    <Label layoutX="19" layoutY="492" styleClass="hint" text="* Campos obligatorios" />
    </children>
   </AnchorPane>
  </children>

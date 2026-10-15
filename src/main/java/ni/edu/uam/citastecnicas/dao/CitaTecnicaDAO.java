@@ -37,8 +37,14 @@ public final class CitaTecnicaDAO {
         if (cita.getId() != 0) throw new IllegalArgumentException("Un registro nuevo debe tener ID 0 antes de guardarse.");
         try (Connection c=ConexionDB.conectar(); PreparedStatement s=c.prepareStatement(
             "INSERT INTO public.cita_tecnica(cliente_id,fecha,hora,tipo_servicio,descripcion,estado) VALUES (?,?,?,?,?,?) RETURNING id")) {
+            comprobarDisponibilidad(c, cita);
             parametros(s,cita);
             try (ResultSet r=s.executeQuery()) { if (r.next()) return r.getInt(1); }
+        } catch (SQLException e) {
+            if ("23505".equals(e.getSQLState())) {
+                throw new SQLException("El cliente ya tiene una cita en ese horario.", "CITA_DUPLICADA", e);
+            }
+            throw e;
         }
         throw new SQLException("No se obtuvo el ID de la cita.");
     }
@@ -47,7 +53,13 @@ public final class CitaTecnicaDAO {
         Validacion.id(cita.getId(), "cita");
         try (Connection c=ConexionDB.conectar(); PreparedStatement s=c.prepareStatement(
             "UPDATE public.cita_tecnica SET cliente_id=?,fecha=?,hora=?,tipo_servicio=?,descripcion=?,estado=? WHERE id=?")) {
+            comprobarDisponibilidad(c, cita);
             parametros(s,cita); s.setInt(7,cita.getId()); comprobarFila(s.executeUpdate());
+        } catch (SQLException e) {
+            if ("23505".equals(e.getSQLState())) {
+                throw new SQLException("El cliente ya tiene una cita en ese horario.", "CITA_DUPLICADA", e);
+            }
+            throw e;
         }
     }
     public void eliminar(int id) throws SQLException {
@@ -56,6 +68,21 @@ public final class CitaTecnicaDAO {
             s.setInt(1,id); comprobarFila(s.executeUpdate());
         }
     }
+    private void comprobarDisponibilidad(Connection conexion, CitaTecnica cita) throws SQLException {
+        String sql = "SELECT id FROM public.cita_tecnica WHERE cliente_id=? AND fecha=? AND hora=? AND id<>? LIMIT 1";
+        try (PreparedStatement s = conexion.prepareStatement(sql)) {
+            s.setInt(1, cita.getClienteId());
+            s.setDate(2, java.sql.Date.valueOf(cita.getFecha()));
+            s.setTime(3, Time.valueOf(cita.getHora()));
+            s.setInt(4, cita.getId());
+            try (ResultSet r = s.executeQuery()) {
+                if (r.next()) {
+                    throw new SQLException("El cliente ya tiene una cita en ese horario.", "CITA_DUPLICADA");
+                }
+            }
+        }
+    }
+
     private void parametros(PreparedStatement s,CitaTecnica c) throws SQLException {
         s.setInt(1,c.getClienteId()); s.setDate(2,java.sql.Date.valueOf(c.getFecha())); s.setTime(3,Time.valueOf(c.getHora()));
         s.setString(4,c.getTipoServicio().trim()); s.setString(5,c.getDescripcion().trim()); s.setString(6,c.getEstado());

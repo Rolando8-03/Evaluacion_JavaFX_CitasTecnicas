@@ -13,9 +13,10 @@ public final class MainApp extends Application {
         Scene scene=new Scene(loader.load(),1180,800);
         scene.getStylesheets().add(MainApp.class.getResource("/css/app.css").toExternalForm());
         controller=loader.getController();
-        stage.setTitle("TecnoAsistencia | Gestión de citas técnicas");
-        stage.setMinWidth(1140); stage.setMinHeight(800); stage.setScene(scene);
+        stage.setTitle("TecnoAsistencia");
+        stage.setMinWidth(1080); stage.setMinHeight(780); stage.setScene(scene);
         stage.setOnCloseRequest(event -> controller.cerrar());
+        stage.setMaximized(true);
         stage.show(); controller.iniciar();
     }
     @Override public void stop() { if (controller!=null) controller.cerrar(); }

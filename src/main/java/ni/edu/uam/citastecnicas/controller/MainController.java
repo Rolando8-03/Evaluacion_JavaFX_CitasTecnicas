@@ -5,6 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.*;
 import javafx.stage.Window;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.net.URL;
 import ni.edu.uam.citastecnicas.dao.*;
 import ni.edu.uam.citastecnicas.db.ConexionDB;
 import ni.edu.uam.citastecnicas.model.*;
@@ -16,8 +19,7 @@ import java.util.List;
 public class MainController {
     @FXML private AnchorPane contenido, clientes, citas;
     @FXML private Button btnClientes, btnCitas;
-    @FXML private Label lblConexion, lblActividad;
-    @FXML private Button btnActualizar;
+    @FXML private ImageView imgLogo;
     @FXML private ProgressIndicator indicador;
     @FXML private ClienteController clientesController;
     @FXML private CitaController citasController;
@@ -33,6 +35,14 @@ public class MainController {
         clientesController.configurar(this);
         citasController.configurar(this);
         mostrarClientes();
+
+        URL logo = MainController.class.getResource(
+            "/images/logo-tecnoasistencia.png"
+        );
+
+        if (logo != null) {
+            imgLogo.setImage(new Image(logo.toExternalForm()));
+        }
     }
 
     @FXML
@@ -64,7 +74,7 @@ public class MainController {
         String estado = citasController.estadoFiltro();
         LocalDate fecha = citasController.fechaFiltro();
 
-        ejecutarEnSegundoPlano("Cargando registros…", () -> {
+        ejecutarEnSegundoPlano(() -> {
             try {
                 if (!ConexionDB.comprobar()) {
                     throw new SQLException("No se pudo comprobar la conexión.");
@@ -82,10 +92,7 @@ public class MainController {
                     clientesController.mostrar(resultado);
                     citasController.mostrar(citas, todos);
                     liberarControles();
-                    lblConexion.setText("PostgreSQL conectado");
-                    lblConexion.getStyleClass().remove("offline");
-                    lblActividad.setText("Datos actualizados · " + todos.size()
-                            + " clientes · " + citas.size() + " citas en esta consulta");
+
                 });
             } catch (SQLException e) {
                 operacionFallida(e);
@@ -97,15 +104,13 @@ public class MainController {
         actualizar();
     }
 
-    public void ejecutarEnSegundoPlano(String mensaje, Runnable trabajo) {
+    public void ejecutarEnSegundoPlano(Runnable trabajo) {
         if (ocupado || cerrado) return;
         ocupado = true;
         contenido.setDisable(true);
         btnClientes.setDisable(true);
         btnCitas.setDisable(true);
-        btnActualizar.setDisable(true);
         indicador.setVisible(true);
-        lblActividad.setText(mensaje);
 
         // Thread y Runnable, igual que la práctica de hilos.
         hiloOperacion = new Thread(() -> {
@@ -138,20 +143,15 @@ public class MainController {
         Platform.runLater(() -> {
             if (cerrado) return;
             liberarControles();
-            lblActividad.setText("Operación pendiente de revisar · actualizá antes de repetir");
+            Alert.AlertType tipo = Alert.AlertType.ERROR;
+            if (error instanceof IllegalArgumentException) tipo = Alert.AlertType.WARNING;
             if (error instanceof SQLException) {
-                SQLException sql = (SQLException) error;
-                String codigo = sql.getSQLState();
-                if (codigo == null || codigo.startsWith("08") || codigo.startsWith("28")
-                        || codigo.equals("3D000") || codigo.equals("CONFIG")) {
-                    lblConexion.setText("Revisá la conexión");
-                    if (!lblConexion.getStyleClass().contains("offline")) {
-                        lblConexion.getStyleClass().add("offline");
-                    }
+                String codigo = ((SQLException) error).getSQLState();
+                if ("CLIENTE_CON_CITAS".equals(codigo) || "CITA_DUPLICADA".equals(codigo)) {
+                    tipo = Alert.AlertType.WARNING;
                 }
             }
-            Alertas.mostrar(ventana(), Alert.AlertType.ERROR,
-                    "No se completó la operación", Alertas.mensaje(error));
+            Alertas.mostrar(ventana(), tipo, "Operación rechazada", Alertas.mensaje(error));
         });
     }
 
@@ -160,7 +160,6 @@ public class MainController {
         contenido.setDisable(false);
         btnClientes.setDisable(false);
         btnCitas.setDisable(false);
-        btnActualizar.setDisable(false);
         indicador.setVisible(false);
     }
 

@@ -9,7 +9,7 @@ import java.util.*;
 public final class ClienteDAO {
     public List<Cliente> buscar(String texto) throws SQLException {
         String sql="SELECT id,nombres,apellidos,telefono,correo,activo FROM public.cliente "
-            + "WHERE nombres ILIKE ? ESCAPE '!' OR apellidos ILIKE ? ESCAPE '!' OR correo ILIKE ? ESCAPE '!' ORDER BY id DESC";
+            + "WHERE nombres ILIKE ? ESCAPE '!' OR apellidos ILIKE ? ESCAPE '!' OR correo ILIKE ? ESCAPE '!' ORDER BY id ASC";
         // Los comodines escritos por el usuario se tratan como texto literal.
         String patron="%" + (texto==null ? "" : texto.trim()).replace("!","!!").replace("%","!%").replace("_","!_") + "%";
         List<Cliente> clientes=new ArrayList<>();
@@ -44,14 +44,29 @@ public final class ClienteDAO {
     }
     public void eliminar(int id) throws SQLException {
         Validacion.id(id, "cliente");
-        // La FK RESTRICT comprueba la relacion de manera atomica en PostgreSQL.
+        // Primero explicar la restricción; la FK sigue protegiendo ante cambios simultáneos.
+        try (Connection c = ConexionDB.conectar(); PreparedStatement s = c.prepareStatement(
+                "SELECT COUNT(*) FROM public.cita_tecnica WHERE cliente_id=?")) {
+            s.setInt(1, id);
+            try (ResultSet r = s.executeQuery()) {
+                if (r.next() && r.getInt(1) > 0) {
+                    String mensaje;
+                    if (r.getInt(1) == 1) {
+                        mensaje = "El cliente tiene una cita registrada y por eso se rechaza su eliminación.";
+                    } else {
+                        mensaje = "El cliente tiene " + r.getInt(1) + " citas registradas y por eso se rechaza su eliminación.";
+                    }
+                    throw new SQLException(mensaje, "CLIENTE_CON_CITAS");
+                }
+            }
+        }
         try (Connection c=ConexionDB.conectar(); PreparedStatement s=c.prepareStatement("DELETE FROM public.cliente WHERE id=?")) {
             s.setInt(1,id);
             try {
                 comprobarFila(s.executeUpdate());
             } catch (SQLException e) {
-                if ("23503".equals(e.getSQLState())) {
-                    throw new SQLException("El cliente tiene citas asociadas.", "CLIENTE_CON_CITAS", e);
+                if ("23503".equals(e.getSQLState()) || "23001".equals(e.getSQLState())) {
+                    throw new SQLException("El cliente tiene una o más citas registradas y por eso se rechaza su eliminación.", "CLIENTE_CON_CITAS", e);
                 }
                 throw e;
             }

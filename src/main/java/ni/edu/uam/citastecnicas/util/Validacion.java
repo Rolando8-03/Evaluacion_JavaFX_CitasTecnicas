@@ -4,6 +4,7 @@ import ni.edu.uam.citastecnicas.model.Cliente;
 import ni.edu.uam.citastecnicas.model.CitaTecnica;
 import java.time.LocalTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Validacion {
     public static final String[] ESTADOS = {"Pendiente", "En proceso", "Finalizada", "Cancelada"};
@@ -41,31 +42,14 @@ public class Validacion {
 
     public static String telefono(String valor) {
         String limpio = texto(valor, "Teléfono", 20);
-        if (!limpio.matches("\\+?[0-9 ()-]+")) {
-            throw new IllegalArgumentException("El teléfono admite números, espacios, guiones, paréntesis y + al inicio.");
+
+        if (!limpio.matches("[0-9]+")) {
+            throw new IllegalArgumentException(
+                "El teléfono debe contener únicamente números del 0 al 9, "
+                    + "sin letras, espacios ni símbolos."
+            );
         }
-        String digitos = limpio.replaceAll("[^0-9]", "");
-        if (digitos.length() < 7 || digitos.length() > 15) {
-            throw new IllegalArgumentException("El teléfono debe contener entre 7 y 15 dígitos.");
-        }
-        int abiertos = 0;
-        int inicioParentesis = -1;
-        for (int i = 0; i < limpio.length(); i++) {
-            char caracter = limpio.charAt(i);
-            if (caracter == '(') {
-                if (abiertos != 0) throw new IllegalArgumentException("Revisá los paréntesis del teléfono.");
-                abiertos++;
-                inicioParentesis = i;
-            } else if (caracter == ')') {
-                if (abiertos != 1) throw new IllegalArgumentException("Revisá los paréntesis del teléfono.");
-                String contenido = limpio.substring(inicioParentesis + 1, i).replace(" ", "");
-                if (!contenido.matches("[0-9]+")) {
-                    throw new IllegalArgumentException("Los paréntesis del teléfono deben contener dígitos.");
-                }
-                abiertos--;
-            }
-        }
-        if (abiertos != 0) throw new IllegalArgumentException("Revisá los paréntesis del teléfono.");
+
         return limpio;
     }
 
@@ -126,6 +110,17 @@ public class Validacion {
         nombre(c.getApellidos(), "Apellidos");
         telefono(c.getTelefono());
         correo(c.getCorreo());
+        if (!c.isActivo()) {
+            throw new IllegalArgumentException("El cliente debe estar activo para registrarse o guardar cambios. Marcá Cliente activo.");
+        }
+    }
+
+    public static void fechaHoraFutura(LocalDate fecha, LocalTime hora) {
+        fecha(fecha);
+        if (hora == null) throw new IllegalArgumentException("La hora es obligatoria.");
+        if (LocalDateTime.of(fecha, hora).isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("La cita no puede estar en el pasado. Elegí una fecha y hora posteriores al momento actual.");
+        }
     }
 
     public static void cita(CitaTecnica c) {
@@ -136,6 +131,7 @@ public class Validacion {
         if (c.getHora().getSecond() != 0 || c.getHora().getNano() != 0) {
             throw new IllegalArgumentException("La hora se registra con precisión de minutos (HH:mm).");
         }
+        fechaHoraFutura(c.getFecha(), c.getHora());
         texto(c.getTipoServicio(), "Servicio", 80);
         texto(c.getDescripcion(), "Descripción", 255);
         if (!estadoPermitido(c.getEstado())) throw new IllegalArgumentException("Seleccioná un estado permitido.");

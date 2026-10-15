@@ -2,6 +2,7 @@ package ni.edu.uam.citastecnicas.util;
 
 import javafx.scene.control.*;
 import javafx.stage.Window;
+import javafx.scene.layout.Region;
 import java.sql.SQLException;
 
 public class Alertas {
@@ -13,6 +14,9 @@ public class Alertas {
         alerta.setTitle(titulo);
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
+        alerta.getDialogPane().setPrefWidth(540);
+        alerta.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alerta.setResizable(true);
         alerta.showAndWait();
     }
 
@@ -22,6 +26,9 @@ public class Alertas {
         alerta.setTitle("Confirmar eliminación");
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
+        alerta.getDialogPane().setPrefWidth(540);
+        alerta.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alerta.setResizable(true);
         ButtonType eliminar = new ButtonType("Eliminar", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
         alerta.getButtonTypes().setAll(eliminar, cancelar);
@@ -40,7 +47,11 @@ public class Alertas {
             if (estado.equals("23505")) {
                 return "Ese correo ya está registrado. Usá un correo diferente.";
             } else if (estado.equals("CLIENTE_CON_CITAS")) {
-                return "No podés eliminar este cliente porque tiene citas asociadas. Eliminá primero sus citas, confirmando cada operación.";
+                return sql.getMessage();
+            } else if (estado.equals("CITA_DUPLICADA")) {
+                return "El cliente ya tiene una cita el mismo día y a la misma hora. Elegí otro horario o cliente.";
+            } else if (estado.equals("23001")) {
+                return "El cliente tiene una o más citas registradas y por eso se rechaza su eliminación.";
             } else if (estado.equals("23503")) {
                 return "El cliente ya no existe o tiene citas relacionadas. Actualizá la lista; no se puede eliminar un cliente con citas.";
             } else if (estado.equals("23514") || estado.equals("23502") || estado.equals("22001") || estado.equals("22021")) {

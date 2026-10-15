@@ -37,8 +37,8 @@ public class PruebasPostgreSQL {
         String token = String.valueOf(System.currentTimeMillis());
         String correo = "qa" + token + "@example.com";
         String correoDos = "qb" + token + "@example.com";
-        int idCliente = 0, idSegundo = 0, idCita = 0;
-        LocalDate fecha = LocalDate.of(2026, 10, 15);
+        int idCliente = 0, idSegundo = 0, idCita = 0, idOtra = 0;
+        LocalDate fecha = LocalDate.now().plusDays(2);
         try {
             idCliente = clientes.insertar(new Cliente(0, "Ana", "López Prueba", "8888-8888", correo, true));
             comprobar(cliente(clientes.buscar("lÓp"), idCliente) != null, "buscar apellido parcial sin mayúsculas");
@@ -60,16 +60,44 @@ public class PruebasPostgreSQL {
             } catch (SQLException e) {
                 comprobar("23505".equals(e.getSQLState()), "duplicado al editar");
             }
-            clientes.actualizar(new Cliente(idCliente, "Ana María", "López Prueba", "7777-7777", correo, false));
+            clientes.actualizar(new Cliente(idCliente, "Ana María", "López Prueba", "7777-7777", correo, true));
             Cliente actualizado = cliente(clientes.buscar(correo), idCliente);
             comprobar(actualizado != null, "cliente permanece al editar mismo correo");
             comprobar(actualizado.getTelefono().equals("7777-7777"), "teléfono persistido");
             comprobar(actualizado.getNombres().equals("Ana María"), "nombres actualizados");
-            comprobar(!actualizado.isActivo(), "activo editable no sustituye eliminación");
+            comprobar(actualizado.isActivo(), "cliente activo");
             idCita = citas.insertar(new CitaTecnica(0, idCliente, "", fecha, LocalTime.of(9, 30), "Reparación", "Pantalla", "Pendiente"));
             CitaTecnica registrada = cita(citas.filtrar("Pendiente", fecha), idCita);
             comprobar(registrada != null, "insertar cita y filtrar por ambas condiciones");
             comprobar(registrada.getNombreCliente().equals("Ana María López Prueba"), "JOIN de nombre del cliente");
+            try {
+                citas.insertar(new CitaTecnica(0, idCliente, "", fecha, LocalTime.of(9, 30), "Otro", "Otro", "Pendiente"));
+                throw new IllegalStateException("Permitió dos citas del cliente en el mismo horario.");
+            } catch (SQLException e) {
+                comprobar("CITA_DUPLICADA".equals(e.getSQLState()), "duplicado al registrar cita");
+            }
+            // Misma cita y mismo horario sí se pueden guardar: se excluye su propio ID.
+            citas.actualizar(new CitaTecnica(idCita, idCliente, "", fecha, LocalTime.of(9, 30), "Reparación", "Pantalla editada", "Pendiente"));
+            comprobaciones++;
+            // Otro cliente puede ocupar ese horario.
+            idOtra = citas.insertar(new CitaTecnica(0, idSegundo, "", fecha, LocalTime.of(9, 30), "Revisión", "Equipo", "Pendiente"));
+            comprobar(idOtra > 0, "distinto cliente en el mismo horario");
+            try {
+                citas.actualizar(new CitaTecnica(idCita, idSegundo, "", fecha, LocalTime.of(9, 30), "Reparación", "Pantalla", "Pendiente"));
+                throw new IllegalStateException("Permitió cambiar la cita a un cliente que ya tiene cita a esa hora.");
+            } catch (SQLException e) {
+                comprobar("CITA_DUPLICADA".equals(e.getSQLState()), "duplicado al editar y cambiar cliente");
+            }
+            citas.eliminar(idOtra); idOtra = 0;
+            idOtra = citas.insertar(new CitaTecnica(0, idCliente, "", fecha, LocalTime.of(9, 31), "Revisión", "Equipo", "Pendiente"));
+            comprobar(idOtra > 0, "misma fecha con hora diferente");
+            try {
+                citas.actualizar(new CitaTecnica(idOtra, idCliente, "", fecha, LocalTime.of(9, 30), "Revisión", "Equipo", "Pendiente"));
+                throw new IllegalStateException("Permitió editar hacia un horario ocupado.");
+            } catch (SQLException e) {
+                comprobar("CITA_DUPLICADA".equals(e.getSQLState()), "duplicado al cambiar fecha y hora");
+            }
+            citas.eliminar(idOtra); idOtra = 0;
             comprobar(cita(citas.filtrar("Finalizada", fecha), idCita) == null, "estado que no coincide");
             comprobar(cita(citas.filtrar(null, fecha.plusDays(1)), idCita) == null, "fecha que no coincide");
             comprobar(cita(citas.filtrar("Pendiente", null), idCita) != null, "solo estado");
@@ -105,6 +133,7 @@ public class PruebasPostgreSQL {
             comprobar(clientes.buscar(correo).isEmpty(), "eliminar físicamente cliente");
             System.out.println("CORRECTO: " + comprobaciones + " comprobaciones con PostgreSQL real.");
         } finally {
+            if (idOtra != 0) citas.eliminar(idOtra);
             if (idCita != 0) citas.eliminar(idCita);
             if (idSegundo != 0) clientes.eliminar(idSegundo);
             if (idCliente != 0) clientes.eliminar(idCliente);

@@ -37,9 +37,9 @@ public class PruebasValidacion {
         for (String nombre : nombres) comprobar(Validacion.nombre(nombre, "Nombre").equals(nombre), "nombre válido");
         String[] malosNombres = {"123", "Ana1", "@Ana", "-Ana", "Ana\nMaría", "Ana_"};
         for (String nombre : malosNombres) rechazar(() -> Validacion.nombre(nombre, "Nombre"), "nombre inválido");
-        String[] telefonos = {"8888-8888", "+505 8888-8888", "(505) 88888888", "1234567", "123456789012345"};
+        String[] telefonos = {"8888-8888", "+505 8888-8888", "(505) 88888888", "123", "ext. 20 / 8888", "Formato libre", "12345678901234567890"};
         for (String telefono : telefonos) comprobar(Validacion.telefono(telefono).equals(telefono), "teléfono válido");
-        String[] malosTelefonos = {"abc", "123456", "1234567890123456", "8888+8888", "(505 88888888", "505)88888888", "((505))88888888", "()88888888", "( )88888888"};
+        String[] malosTelefonos = {"", " ", "123456789012345678901"};
         for (String telefono : malosTelefonos) rechazar(() -> Validacion.telefono(telefono), "teléfono inválido");
         String[] correos = {"ana@example.com", "JUAN@EMPRESA.COM", "juan+ventas@empresa.com", "a@sub.empresa.com", "a.b@empresa.com"};
         for (String correo : correos) comprobar(Validacion.correo(correo).equals(correo), "correo válido");
@@ -55,29 +55,37 @@ public class PruebasValidacion {
         rechazar(() -> Validacion.fecha(LocalDate.of(0, 1, 1)), "año cero");
         rechazar(() -> Validacion.fecha(LocalDate.of(10000, 1, 1)), "año fuera de rango");
         Validacion.fecha(LocalDate.of(2024, 2, 29)); comprobaciones++;
-        // La guía no prohíbe fechas pasadas: permite registrar atención histórica.
+        // Los filtros pueden consultar fechas antiguas; las citas se validan con fecha y hora juntas.
         Validacion.fecha(LocalDate.of(2020, 1, 1)); comprobaciones++;
         rechazar(() -> Validacion.id(0, "cliente"), "ID cero");
         rechazar(() -> Validacion.id(-1, "cita"), "ID negativo");
         Validacion.id(1, "cliente"); comprobaciones++;
-        Validacion.cliente(new Cliente(0, "Ana", "López", "8888-8888", "a@example.com", false)); comprobaciones++;
+        Validacion.cliente(new Cliente(0, "Ana", "López", "8888-8888", "a@example.com", true)); comprobaciones++;
+        rechazar(() -> Validacion.cliente(new Cliente(0, "Ana", "López", "tel. libre", "a@example.com", false)), "cliente inactivo");
         rechazar(() -> Validacion.cliente(null), "cliente null");
         for (String estado : Validacion.ESTADOS) {
-            Validacion.cita(new CitaTecnica(0, 1, "Ana", LocalDate.now(), LocalTime.NOON, "Servicio", "Descripción", estado));
+            Validacion.cita(new CitaTecnica(0, 1, "Ana", LocalDate.now().plusDays(1), LocalTime.NOON, "Servicio", "Descripción", estado));
             comprobaciones++;
         }
+        rechazar(() -> Validacion.fechaHoraFutura(LocalDate.now().minusDays(1), LocalTime.NOON), "día pasado");
+        LocalDateTime haceUnMinuto = LocalDateTime.now().minusMinutes(1);
+        rechazar(() -> Validacion.fechaHoraFutura(haceUnMinuto.toLocalDate(), haceUnMinuto.toLocalTime().withSecond(0).withNano(0)), "hora pasada de hoy");
+        LocalDateTime luego = LocalDateTime.now().plusMinutes(2);
+        Validacion.fechaHoraFutura(luego.toLocalDate(), luego.toLocalTime().withSecond(0).withNano(0)); comprobaciones++;
         String[] estadosIncorrectos = {"", "Otro", "pendiente", " Pendiente ", null};
         for (String estado : estadosIncorrectos) {
-            rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "Ana", LocalDate.now(), LocalTime.NOON, "Servicio", "Descripción", estado)), "estado inválido");
+            rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "Ana", LocalDate.now().plusDays(1), LocalTime.NOON, "Servicio", "Descripción", estado)), "estado inválido");
         }
         rechazar(() -> Validacion.cita(null), "cita null");
-        rechazar(() -> Validacion.cita(new CitaTecnica(0, 0, "", LocalDate.now(), LocalTime.NOON, "S", "D", "Pendiente")), "cliente no seleccionado");
+        rechazar(() -> Validacion.cita(new CitaTecnica(0, 0, "", LocalDate.now().plusDays(1), LocalTime.NOON, "S", "D", "Pendiente")), "cliente no seleccionado");
         rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "", LocalDate.now(), null, "S", "D", "Pendiente")), "hora ausente");
-        rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "", LocalDate.now(), LocalTime.of(9, 30, 1), "S", "D", "Pendiente")), "segundos no admitidos");
-        rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "", LocalDate.now(), LocalTime.NOON, " ", "D", "Pendiente")), "servicio vacío");
-        rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "", LocalDate.now(), LocalTime.NOON, "S", " ", "Pendiente")), "descripción vacía");
+        rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "", LocalDate.now().plusDays(1), LocalTime.of(9, 30, 1), "S", "D", "Pendiente")), "segundos no admitidos");
+        rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "", LocalDate.now().plusDays(1), LocalTime.NOON, " ", "D", "Pendiente")), "servicio vacío");
+        rechazar(() -> Validacion.cita(new CitaTecnica(0, 1, "", LocalDate.now().plusDays(1), LocalTime.NOON, "S", " ", "Pendiente")), "descripción vacía");
         comprobar(Alertas.mensaje(new SQLException("detalle", "23505")).contains("correo"), "mensaje duplicado");
-        comprobar(Alertas.mensaje(new SQLException("detalle", "CLIENTE_CON_CITAS")).contains("citas"), "mensaje FK");
+        comprobar(Alertas.mensaje(new SQLException("El cliente tiene citas registradas.", "CLIENTE_CON_CITAS")).contains("citas"), "mensaje FK");
+        comprobar(Alertas.mensaje(new SQLException("detalle", "23001")).contains("rechaza"), "RESTRICT 23001 explicado");
+        comprobar(Alertas.mensaje(new SQLException("detalle", "CITA_DUPLICADA")).contains("misma hora"), "cita repetida explicada");
         comprobar(Alertas.mensaje(new SQLException("clave secreta", "28P01")).contains("credenciales"), "mensaje autenticación");
         comprobar(!Alertas.mensaje(new SQLException("clave secreta", "28P01")).contains("clave secreta"), "sin divulgar error crudo");
         System.out.println("CORRECTO: " + comprobaciones + " comprobaciones de validación y mensajes.");

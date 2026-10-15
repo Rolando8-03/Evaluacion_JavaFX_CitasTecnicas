@@ -1,22 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.citastecnicas.controller.MainController" prefWidth="1180" prefHeight="760" styleClass="app-root">
- <children>
-  <Label text="TECNOASISTENCIA" layoutX="28" layoutY="19" styleClass="brand"/>
-  <Label text="Gestión de citas técnicas" layoutX="28" layoutY="40" styleClass="page-title"/>
-  <Label text="Clientes, mantenimiento y reparación · Nicaragua" layoutX="29" layoutY="80" styleClass="subtitle"/>
-  <Label fx:id="lblConexion" text="Conexión pendiente" layoutY="25" AnchorPane.rightAnchor="28" styleClass="connection,offline"/>
-  <Button fx:id="btnActualizar" text="Actualizar / conectar" onAction="#actualizar" layoutY="63" AnchorPane.rightAnchor="28" styleClass="secondary"/>
-  <Button fx:id="btnClientes" text="01   Clientes" onAction="#mostrarClientes" layoutX="25" layoutY="123" prefHeight="42" prefWidth="135" styleClass="nav-button"/>
-  <Button fx:id="btnCitas" text="02   Citas técnicas" onAction="#mostrarCitas" layoutX="160" layoutY="123" prefHeight="42" prefWidth="177" styleClass="nav-button"/>
-  <AnchorPane fx:id="contenido" AnchorPane.topAnchor="165" AnchorPane.bottomAnchor="46" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
-   <children>
-    <fx:include fx:id="clientes" source="cliente-view.fxml" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"/>
-    <fx:include fx:id="citas" source="cita-view.fxml" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"/>
-   </children>
-  </AnchorPane>
-  <ProgressIndicator fx:id="indicador" visible="false" prefWidth="20" prefHeight="20" AnchorPane.leftAnchor="25" AnchorPane.bottomAnchor="13"/>
-  <Label fx:id="lblActividad" text="Listo para conectar" AnchorPane.leftAnchor="54" AnchorPane.bottomAnchor="16" styleClass="footer"/>
- </children>
+<?import javafx.scene.image.ImageView?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ni.edu.uam.citastecnicas.controller.MainController"
+            prefWidth="1180"
+            prefHeight="760"
+            styleClass="app-root">
+
+  <children>
+
+    <Label text="TECNOASISTENCIA"
+           layoutX="28"
+           layoutY="19"
+           styleClass="brand"/>
+
+    <Label text="Gestión de citas técnicas"
+           layoutX="28"
+           layoutY="40"
+           styleClass="page-title"/>
+
+    <ImageView fx:id="imgLogo"
+               fitWidth="600"
+               fitHeight="110"
+               preserveRatio="true"
+               smooth="true"
+               mouseTransparent="true"
+               AnchorPane.rightAnchor="28"
+               AnchorPane.topAnchor="16"/>
+
+    <Button fx:id="btnClientes"
+            text="Clientes"
+            onAction="#mostrarClientes"
+            layoutX="25"
+            layoutY="123"
+            prefHeight="42"
+            prefWidth="135"
+            styleClass="nav-button"/>
+
+    <Button fx:id="btnCitas"
+            text="Citas técnicas"
+            onAction="#mostrarCitas"
+            layoutX="160"
+            layoutY="123"
+            prefHeight="42"
+            prefWidth="177"
+            styleClass="nav-button"/>
+
+    <AnchorPane fx:id="contenido"
+                AnchorPane.topAnchor="165"
+                AnchorPane.bottomAnchor="20"
+                AnchorPane.leftAnchor="20"
+                AnchorPane.rightAnchor="20">
+
+      <children>
+
+        <fx:include fx:id="clientes"
+                    source="cliente-view.fxml"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0"/>
+
+        <fx:include fx:id="citas"
+                    source="cita-view.fxml"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0"/>
+
+      </children>
+
+    </AnchorPane>
+
+    <ProgressIndicator fx:id="indicador"
+                       visible="false"
+                       prefWidth="20"
+                       prefHeight="20"
+                       AnchorPane.rightAnchor="28"
+                       AnchorPane.topAnchor="128"/>
+
+  </children>
+
 </AnchorPane>

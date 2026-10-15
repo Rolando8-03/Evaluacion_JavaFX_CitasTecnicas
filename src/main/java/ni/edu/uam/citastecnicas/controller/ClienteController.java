@@ -28,6 +28,8 @@ public final class ClienteController {
         colTelefono.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getTelefono()));
         colCorreo.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getCorreo()));
         colActivo.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().isActivo()?"Activo":"Inactivo"));
+        tblClientes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        colActivo.setVisible(false);
         tblClientes.setPlaceholder(new Label("No hay clientes para esta búsqueda."));
         tblClientes.getSelectionModel().selectedItemProperty().addListener((o,a,b) -> { if (b!=null) seleccionar(b); });
         nuevo();
@@ -36,6 +38,8 @@ public final class ClienteController {
     public String busqueda() { return txtBuscar.getText()==null ? "" : txtBuscar.getText().trim(); }
     public void mostrar(List<Cliente> clientes) {
         int id=seleccionado;
+        // Mantener el orden de registro al recargar, incluso si antes se ordenó otra columna.
+        tblClientes.getSortOrder().clear();
         tblClientes.setItems(FXCollections.observableArrayList(clientes));
         lblTotal.setText(clientes.size() + " clientes encontrados");
         if (id!=0) {
@@ -79,7 +83,7 @@ public final class ClienteController {
             return;
         }
         final Cliente datosCliente = cliente;
-        principal.ejecutarEnSegundoPlano("Procesando cliente…", () -> {
+        principal.ejecutarEnSegundoPlano(() -> {
             try {
                 String mensaje;
                 if (accion.equals("registrar")) {
